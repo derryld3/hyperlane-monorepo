@@ -10,15 +10,29 @@ export default buildModule('HypERC20', (m) => {
   const TOKEN_SYMBOL = 'TUSDC';
   const LOCAL_DOMAIN = 1; // Local domain for the mailbox
 
-  // Deploy Mailbox first
+  // Deploy TestIsm first
+  const testIsm = m.contract('TestIsm', []);
+
+  // Deploy Mailbox
   const mailbox = m.contract('Mailbox', [LOCAL_DOMAIN]);
 
-  // Initialize the Mailbox
+  // Deploy MerkleTreeHook with mailbox address
+  const merkleTreeHook = m.contract('MerkleTreeHook', [mailbox]);
+
+  // Deploy ProtocolFee hook with specified parameters
+  const protocolFeeHook = m.contract('ProtocolFee', [
+    '100000000000000000', // maxProtocolFee
+    '0', // protocolFee
+    '0xFeb8E9Daa0b52D3D0A4615098C3A2FB0c55F13ED', // beneficiary
+    '0xFeb8E9Daa0b52D3D0A4615098C3A2FB0c55F13ED' // owner
+  ]);
+
+  // Initialize the Mailbox with TestIsm, MerkleTreeHook as default, and ProtocolFee as required
   m.call(mailbox, 'initialize', [
     m.getParameter<string>('owner'),
-    m.getParameter<string>('interchainSecurityModule'),
-    m.getParameter<string>('hook'),
-    m.getParameter<string>('hook') // Using same hook for required hook
+    testIsm, // Use deployed TestIsm as the default ISM
+    merkleTreeHook, // Use deployed MerkleTreeHook as default hook
+    protocolFeeHook // Use ProtocolFee as required hook
   ]);
 
   // Deploy HypERC20 using the deployed mailbox address
@@ -29,10 +43,10 @@ export default buildModule('HypERC20', (m) => {
     TOTAL_SUPPLY,
     TOKEN_NAME,
     TOKEN_SYMBOL,
-    m.getParameter<string>('hook'),
-    m.getParameter<string>('interchainSecurityModule'),
+    merkleTreeHook, // Use deployed MerkleTreeHook for HypERC20
+    testIsm, // Use deployed TestIsm for HypERC20 as well
     m.getParameter<string>('owner')
   ]);
 
-  return { mailbox, hypERC20 };
+  return { testIsm, mailbox, merkleTreeHook, protocolFeeHook, hypERC20 };
 });
