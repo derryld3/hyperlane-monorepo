@@ -16,6 +16,8 @@ interface IFiatTokenV2_2 is IERC20 {
 }
 
 contract HypERC20_BridgedUSDC is HypERC20 {
+    uint8 private constant TOKEN_DECIMALS = 6;
+    uint8 private constant TOKEN_SCALE = 1;
     IFiatTokenV2_2 public immutable usdc;
 
     /**
@@ -26,7 +28,7 @@ contract HypERC20_BridgedUSDC is HypERC20 {
     constructor(
         address _mailbox,
         address _usdcAddress
-    ) HypERC20(6, 1, _mailbox) {
+    ) HypERC20(TOKEN_DECIMALS, TOKEN_SCALE, _mailbox) {
         require(_usdcAddress != address(0), "USDC address cannot be zero");
         usdc = IFiatTokenV2_2(_usdcAddress);
     }
