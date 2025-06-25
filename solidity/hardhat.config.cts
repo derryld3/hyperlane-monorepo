@@ -4,6 +4,8 @@ import '@typechain/hardhat';
 import 'hardhat-gas-reporter';
 import 'hardhat-ignore-warnings';
 import 'solidity-coverage';
+import '@nomicfoundation/hardhat-ignition';
+import '@nomicfoundation/hardhat-ignition-ethers';
 
 import { rootHardhatConfig } from './rootHardhatConfig.cjs';
 
