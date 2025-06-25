@@ -1,5 +1,6 @@
 import '@nomiclabs/hardhat-ethers';
 import '@nomiclabs/hardhat-waffle';
+import 'dotenv/config';
 import '@typechain/hardhat';
 import 'hardhat-gas-reporter';
 import 'hardhat-ignore-warnings';
@@ -14,6 +15,12 @@ import { rootHardhatConfig } from './rootHardhatConfig.cjs';
  */
 module.exports = {
   ...rootHardhatConfig,
+  networks: {
+    seaseedtest: {
+      url: 'https://rpc.testnet.seaseed.network',
+      accounts: process.env.PRIVATE_KEY ? [process.env.PRIVATE_KEY] : [],
+    },
+  },
   gasReporter: {
     currency: 'USD',
   },
