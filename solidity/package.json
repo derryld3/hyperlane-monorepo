@@ -97,7 +97,8 @@
     "storage": "./storage.sh",
     "version:update": "sh ./bytecodeversion.sh",
     "version:changed": "yarn version:update && git diff --exit-code contracts/PackageVersioned.sol",
-    "version:exhaustive": "yarn tsx ./test/exhaustiveversion.test.ts"
+    "version:exhaustive": "yarn tsx ./test/exhaustiveversion.test.ts",
+    "deployAndVerifyBridgedUSDC_seassed": "npx hardhat ignition deploy ignition/modules/HypERC20BridgedUSDC.ts --parameters ignition/modules/parameters.json --network seaseedtest --deployment-id BridgedUSDC_seassed && npx hardhat ignition verify --network seaseedtest BridgedUSDC_seassed"
   },
   "peerDependencies": {
     "@ethersproject/abi": "*",

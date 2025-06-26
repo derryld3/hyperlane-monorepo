@@ -21,6 +21,21 @@ module.exports = {
       accounts: process.env.PRIVATE_KEY ? [process.env.PRIVATE_KEY] : [],
     },
   },
+  etherscan: {
+    apiKey: {
+      'seaseedtest': 'empty'
+    },
+    customChains: [
+      {
+        network: "seaseedtest",
+        chainId: 7336,
+        urls: {
+          apiURL: "https://explorer.testnet.seaseed.network/api",
+          browserURL: "https://explorer.testnet.seaseed.network"
+        }
+      }
+    ]
+  },
   gasReporter: {
     currency: 'USD',
   },
