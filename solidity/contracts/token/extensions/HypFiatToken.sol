@@ -6,11 +6,17 @@ import {HypERC20Collateral} from "../HypERC20Collateral.sol";
 
 // see https://github.com/circlefin/stablecoin-evm/blob/master/doc/tokendesign.md#issuing-and-destroying-tokens
 contract HypFiatToken is HypERC20Collateral {
+
+    bool public isRouterFeeActive;
+    mapping(uint32 => uint256) public routerFees; // destination domain id -> fee amount (raw)
+
     constructor(
         address _fiatToken,
         uint256 _scale,
         address _mailbox
-    ) HypERC20Collateral(_fiatToken, _scale, _mailbox) {}
+    ) HypERC20Collateral(_fiatToken, _scale, _mailbox) {
+        isRouterFeeActive = true;
+    }
 
     function _transferFromSender(
         uint256 _amount
@@ -38,14 +44,26 @@ contract HypFiatToken is HypERC20Collateral {
         uint256 _amountOrId
     ) external payable override returns (bytes32 messageId) {
 
-        uint256 transferFee = 500000; // USDC has 6 decimals. Transfer fee is flat 0.5 USDC
+        uint256 transferFee = 0;
+        uint256 amountAfterFee = _amountOrId;
         
-        require(_amountOrId > transferFee, "Transfer amount must be greater than fee");
-        wrappedToken.transferFrom(msg.sender, address(this), transferFee);
+        if (isRouterFeeActive) {
+            transferFee = routerFees[_destination];
+            require(_amountOrId > transferFee, "Transfer amount must be greater than fee");
+            wrappedToken.transferFrom(msg.sender, address(this), transferFee);
+            // Deduct fee from the amount being transferred
+            amountAfterFee = _amountOrId - transferFee;
+        }
         
-        // Deduct fee from the amount being transferred
-        uint256 amountAfterFee = _amountOrId - transferFee;
         return _transferRemote(_destination, _recipient, amountAfterFee, msg.value);
+    }
+
+    function setRouterFeeActive(bool _isActive) external onlyOwner {
+        isRouterFeeActive = _isActive;
+    }
+
+    function setRouterFee(uint32 _destination, uint256 _fee) external onlyOwner {
+        routerFees[_destination] = _fee;
     }
 
     function claimCollectedFees() external onlyOwner {
