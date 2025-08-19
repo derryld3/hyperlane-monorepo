@@ -7,15 +7,20 @@ import {HypERC20Collateral} from "../HypERC20Collateral.sol";
 // see https://github.com/circlefin/stablecoin-evm/blob/master/doc/tokendesign.md#issuing-and-destroying-tokens
 contract HypFiatToken is HypERC20Collateral {
 
+    // Events
+    event RouterFeeUpdated(uint32 indexed destination, uint256 fee);
+    event FeesCollected(address indexed owner, uint256 amount);
+    event RouterFeeStatusChanged(bool isActive);
+
     bool public isRouterFeeActive;
     mapping(uint32 => uint256) public routerFees; // destination domain id -> fee amount (raw)
+    address public beneficiary;
 
     constructor(
         address _fiatToken,
         uint256 _scale,
         address _mailbox
     ) HypERC20Collateral(_fiatToken, _scale, _mailbox) {
-        isRouterFeeActive = true;
     }
 
     function _transferFromSender(
@@ -60,15 +65,26 @@ contract HypFiatToken is HypERC20Collateral {
 
     function setRouterFeeActive(bool _isActive) external onlyOwner {
         isRouterFeeActive = _isActive;
+        emit RouterFeeStatusChanged(_isActive);
     }
 
     function setRouterFee(uint32 _destination, uint256 _fee) external onlyOwner {
         routerFees[_destination] = _fee;
+        emit RouterFeeUpdated(_destination, _fee);
     }
 
-    function claimCollectedFees() external onlyOwner {
+    function setBeneficiary(address _beneficiary) external onlyOwner {
+        require(_beneficiary != address(0), "Beneficiary cannot be zero address");
+        beneficiary = _beneficiary;
+    }
+
+    function claimCollectedFees() external {
+        require(beneficiary != address(0), "Beneficiary not set");
+        
         uint256 balance = wrappedToken.balanceOf(address(this));
         require(balance > 0, "No fees to claim");
-        wrappedToken.transfer(owner(), balance);
+        
+        wrappedToken.transfer(beneficiary, balance);
+        emit FeesCollected(beneficiary, balance);
     }
 }
