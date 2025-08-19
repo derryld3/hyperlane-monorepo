@@ -31,4 +31,26 @@ contract HypFiatToken is HypERC20Collateral {
             "FiatToken mint failed"
         );
     }
+
+    function transferRemote(
+        uint32 _destination,
+        bytes32 _recipient,
+        uint256 _amountOrId
+    ) external payable override returns (bytes32 messageId) {
+
+        uint256 transferFee = 500000; // USDC has 6 decimals. Transfer fee is flat 0.5 USDC
+        
+        require(_amountOrId > transferFee, "Transfer amount must be greater than fee");
+        wrappedToken.transferFrom(msg.sender, address(this), transferFee);
+        
+        // Deduct fee from the amount being transferred
+        uint256 amountAfterFee = _amountOrId - transferFee;
+        return _transferRemote(_destination, _recipient, amountAfterFee, msg.value);
+    }
+
+    function claimCollectedFees() external onlyOwner {
+        uint256 balance = wrappedToken.balanceOf(address(this));
+        require(balance > 0, "No fees to claim");
+        wrappedToken.transfer(owner(), balance);
+    }
 }
