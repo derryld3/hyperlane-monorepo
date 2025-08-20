@@ -2,13 +2,19 @@
   "extends": "@hyperlane-xyz/tsconfig/tsconfig.json",
   "compilerOptions": {
     "outDir": "./dist",
-    "rootDir": "./core-utils"
+    "module": "esnext",
+    "moduleResolution": "node",
+    "target": "es2020"
   },
+  "include": [
+    "./core-utils/**/*"
+  ],
   "exclude": [
     "./test",
     "hardhat.config.cts",
     "./dist",
     "zk-hardhat.config.cts",
-    "rootHardhatConfig.cts"
+    "rootHardhatConfig.cts",
+    "./lib/**/*"
   ]
 }
