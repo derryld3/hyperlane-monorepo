@@ -86,7 +86,7 @@ contract HypFiatToken is HypERC20Collateral {
         uint256 balance = wrappedToken.balanceOf(address(this));
         require(balance > 0, "No fees to claim");
         
-        wrappedToken.transfer(beneficiary, balance);
+        IERC20(address(wrappedToken)).safeTransfer(beneficiary, balance);
         emit FeesCollected(beneficiary, balance);
     }
 }
