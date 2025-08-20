@@ -3,7 +3,7 @@ pragma solidity >=0.8.0;
 
 import {IFiatToken} from "../interfaces/IFiatToken.sol";
 import {HypERC20Collateral} from "../HypERC20Collateral.sol";
-import {SafeERC20,IERC20} from "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
+import {SafeERC20, IERC20} from "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 
 // see https://github.com/circlefin/stablecoin-evm/blob/master/doc/tokendesign.md#issuing-and-destroying-tokens
 contract HypFiatToken is HypERC20Collateral {
@@ -18,6 +18,11 @@ contract HypFiatToken is HypERC20Collateral {
     bool public isRouterFeeActive;
     mapping(uint32 => uint256) public routerFees; // destination domain id -> fee amount (raw)
     address public beneficiary;
+
+    modifier onlyBeneficiary() {
+        require(msg.sender == beneficiary, "Only beneficiary can call this function");
+        _;
+    }
 
     constructor(
         address _fiatToken,
@@ -82,7 +87,7 @@ contract HypFiatToken is HypERC20Collateral {
         beneficiary = _beneficiary;
     }
 
-    function claimCollectedFees() external {
+    function claimCollectedFees() external onlyBeneficiary {
         require(beneficiary != address(0), "Beneficiary not set");
         
         uint256 balance = wrappedToken.balanceOf(address(this));
