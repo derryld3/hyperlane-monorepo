@@ -13,6 +13,7 @@ contract HypFiatToken is HypERC20Collateral {
     event RouterFeeUpdated(uint32 indexed destination, uint256 fee);
     event FeesCollected(address indexed beneficiary, uint256 amount);
     event RouterFeeStatusChanged(bool isActive);
+    event BeneficiaryUpdated(address indexed previous, address indexed current);
 
     bool public isRouterFeeActive;
     mapping(uint32 => uint256) public routerFees; // destination domain id -> fee amount (raw)
@@ -77,6 +78,7 @@ contract HypFiatToken is HypERC20Collateral {
 
     function setBeneficiary(address _beneficiary) external onlyOwner {
         require(_beneficiary != address(0), "Beneficiary cannot be zero address");
+        emit BeneficiaryUpdated(beneficiary, _beneficiary);
         beneficiary = _beneficiary;
     }
 
