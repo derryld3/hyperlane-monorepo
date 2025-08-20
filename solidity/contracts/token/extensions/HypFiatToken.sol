@@ -11,7 +11,7 @@ contract HypFiatToken is HypERC20Collateral {
 
     // Events
     event RouterFeeUpdated(uint32 indexed destination, uint256 fee);
-    event FeesCollected(address indexed owner, uint256 amount);
+    event FeesCollected(address indexed beneficiary, uint256 amount);
     event RouterFeeStatusChanged(bool isActive);
 
     bool public isRouterFeeActive;
