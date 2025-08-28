@@ -539,6 +539,16 @@ export const defaultMultisigConfigs: ChainMap<MultisigConfig> = {
     ],
   },
 
+  celosepolia: {
+    threshold: 1,
+    validators: [
+      {
+        address: '0x4a5cfcfd7f793f4ceba170c3decbe43bd8253ef6',
+        alias: AW_VALIDATOR_ALIAS,
+      },
+    ],
+  },
+
   cheesechain: {
     threshold: 2,
     validators: [
@@ -1060,6 +1070,16 @@ export const defaultMultisigConfigs: ChainMap<MultisigConfig> = {
       },
       DEFAULT_MERKLY_VALIDATOR,
       DEFAULT_MITOSIS_VALIDATOR,
+    ],
+  },
+
+  incentivtestnet: {
+    threshold: 1,
+    validators: [
+      {
+        address: '0x3133eeb96fd96f9f99291088613edf7401149e6f',
+        alias: AW_VALIDATOR_ALIAS,
+      },
     ],
   },
 
@@ -1866,6 +1886,16 @@ export const defaultMultisigConfigs: ChainMap<MultisigConfig> = {
       },
       DEFAULT_MERKLY_VALIDATOR,
       DEFAULT_MITOSIS_VALIDATOR,
+    ],
+  },
+
+  radixtestnet: {
+    threshold: 1,
+    validators: [
+      {
+        address: '0xeddaf7958627cfd35400c95db19a656a4a8a92c6',
+        alias: AW_VALIDATOR_ALIAS,
+      },
     ],
   },
 
