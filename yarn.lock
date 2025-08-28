@@ -8206,7 +8206,6 @@ __metadata:
     "@openzeppelin/contracts": "npm:^4.9.3"
     "@openzeppelin/contracts-upgradeable": "npm:^4.9.3"
     "@typechain/ethers-v5": "npm:^11.1.2"
-    "@typechain/ethers-v6": "npm:^0.5.1"
     "@typechain/hardhat": "npm:^9.1.0"
     "@types/node": "npm:^18.14.5"
     chai: "npm:^4.5.0"
