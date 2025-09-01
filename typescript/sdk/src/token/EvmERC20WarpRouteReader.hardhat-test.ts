@@ -477,6 +477,24 @@ describe('ERC20WarpRouterReader', async () => {
     expect(derivedConfig.token).to.equal(collateralFiatToken.address);
   });
 
+  it('should deploy collateral fiat token with beneficiary correctly', async () => {
+    const beneficiaryAddress = '0x1234567890123456789012345678901234567890';
+    // Create config with beneficiary
+    const config: WarpRouteDeployConfigMailboxRequired = {
+      [chain]: {
+        type: TokenType.collateralFiat,
+        token: collateralFiatToken.address,
+        beneficiary: beneficiaryAddress,
+        ...baseConfig,
+      },
+    };
+    // Deploy with config
+    const warpRoute = await deployer.deploy(config);
+    // Verify deployment was successful
+    expect(warpRoute[chain].collateralFiat).to.exist;
+    expect(warpRoute[chain].collateralFiat.address).to.be.a('string');
+  });
+
   it('should return 0x0 if ism is not set onchain', async () => {
     // Create config
     const config: WarpRouteDeployConfigMailboxRequired = {

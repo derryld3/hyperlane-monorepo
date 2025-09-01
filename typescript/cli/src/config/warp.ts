@@ -235,7 +235,6 @@ export async function createWarpRouteDeployConfig({
       case TokenType.collateral:
       case TokenType.XERC20:
       case TokenType.XERC20Lockbox:
-      case TokenType.collateralFiat:
         result[chain] = {
           type,
           owner,
@@ -244,6 +243,22 @@ export async function createWarpRouteDeployConfig({
           token: await input({
             message: `Enter the existing token address on chain ${chain}`,
           }),
+        };
+        break;
+      case TokenType.collateralFiat:
+        const tokenAddress = await input({
+          message: `Enter the existing FiatToken address on chain ${chain}`,
+        });
+        const beneficiary = await input({
+          message: `Enter the beneficiary address for fees on chain ${chain} (optional, defaults to mailbox)`,
+        });
+        result[chain] = {
+          type,
+          owner,
+          proxyAdmin,
+          interchainSecurityModule,
+          token: tokenAddress,
+          ...(beneficiary && { beneficiary }),
         };
         break;
       case TokenType.collateralUri:

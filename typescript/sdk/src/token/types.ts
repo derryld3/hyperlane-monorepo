@@ -108,12 +108,24 @@ export const CollateralTokenConfigSchema = TokenMetadataSchema.partial().extend(
       .describe(
         'Existing token address to extend with Warp Route functionality',
       ),
+    beneficiary: z
+      .string()
+      .describe(
+        'Address that will receive fees for collateralFiat tokens',
+      )
+      .optional(),
     ...BaseMovableTokenConfigSchema.shape,
   },
 );
 
 export type CollateralTokenConfig = z.infer<typeof CollateralTokenConfigSchema>;
 export const isCollateralTokenConfig = isCompliant(CollateralTokenConfigSchema);
+
+export const isCollateralFiatTokenConfig = (
+  config: HypTokenRouterConfig,
+): boolean => {
+  return isCollateralTokenConfig(config) && config.type === TokenType.collateralFiat;
+};
 
 export enum XERC20Type {
   Velo = 'velo',

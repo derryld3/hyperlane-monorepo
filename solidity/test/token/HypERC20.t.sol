@@ -592,7 +592,8 @@ contract HypFiatTokenTest is HypTokenTest {
         localToken = new HypFiatToken(
             address(primaryToken),
             SCALE,
-            address(localMailbox)
+            address(localMailbox),
+            address(this)
         );
         fiatToken = HypFiatToken(address(localToken));
 
