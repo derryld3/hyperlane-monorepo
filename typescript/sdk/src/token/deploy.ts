@@ -53,6 +53,7 @@ import {
   WarpRouteDeployConfig,
   WarpRouteDeployConfigMailboxRequired,
   isCctpTokenConfig,
+  isCollateralFiatTokenConfig,
   isCollateralTokenConfig,
   isMovableCollateralTokenConfig,
   isNativeTokenConfig,
@@ -130,7 +131,11 @@ abstract class TokenDeployer<
     // TODO: derive as specified in https://github.com/hyperlane-xyz/hyperlane-monorepo/issues/5296
     const scale = config.scale ?? 1;
 
-    if (isCollateralTokenConfig(config) || isXERC20TokenConfig(config)) {
+    if (isCollateralFiatTokenConfig(config)) {
+      const collateralConfig = config as any;
+      const beneficiary = collateralConfig.beneficiary || config.mailbox;
+      return [collateralConfig.token, scale, config.mailbox, beneficiary];
+    } else if (isCollateralTokenConfig(config) || isXERC20TokenConfig(config)) {
       return [config.token, scale, config.mailbox];
     } else if (isNativeTokenConfig(config)) {
       return [scale, config.mailbox];

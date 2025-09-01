@@ -27,8 +27,11 @@ contract HypFiatToken is HypERC20Collateral {
     constructor(
         address _fiatToken,
         uint256 _scale,
-        address _mailbox
+        address _mailbox,
+        address _beneficiary
     ) HypERC20Collateral(_fiatToken, _scale, _mailbox) {
+        require(_beneficiary != address(0), "Beneficiary cannot be zero address");
+        beneficiary = _beneficiary;
     }
 
     function _transferFromSender(
