@@ -72,7 +72,7 @@ fi
 echo -e "${GREEN}✓ Private key is set${NC}"
 
 # Navigate to the solidity directory
-cd ../solidity
+cd solidity
 if [ $? -ne 0 ]; then
     echo -e "${RED}Error: Could not navigate to solidity directory${NC}"
     exit 1
