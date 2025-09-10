@@ -8,6 +8,7 @@ export enum TokenType {
   XERC20 = 'xERC20',
   XERC20Lockbox = 'xERC20Lockbox',
   collateralFiat = 'collateralFiat',
+  collateralFiatWithFee = 'collateralFiatWithFee',
   collateralUri = 'collateralUri',
   collateralCctp = 'collateralCctp',
   native = 'native',
@@ -25,6 +26,7 @@ const isMovableCollateralTokenTypeMap = {
   [TokenType.collateral]: true,
   [TokenType.collateralCctp]: false,
   [TokenType.collateralFiat]: false,
+  [TokenType.collateralFiatWithFee]: false,
   [TokenType.collateralUri]: false,
   [TokenType.collateralVault]: true,
   [TokenType.collateralVaultRebase]: true,
@@ -53,6 +55,8 @@ export const gasOverhead = (tokenType: TokenType): number => {
       return 64_000;
     case TokenType.native:
       return 44_000;
+    case TokenType.collateralFiatWithFee:
+      return 72_000; // Slightly higher due to fee collection logic
     default:
       return 68_000;
   }
