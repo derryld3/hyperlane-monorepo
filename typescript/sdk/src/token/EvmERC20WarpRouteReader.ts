@@ -103,6 +103,8 @@ export class EvmERC20WarpRouteReader extends EvmRouterReader {
       [TokenType.collateral]: this.deriveHypCollateralTokenConfig.bind(this),
       [TokenType.collateralFiat]:
         this.deriveHypCollateralFiatTokenConfig.bind(this),
+      [TokenType.collateralFiatWithFee]:
+        this.deriveHypCollateralFiatWithFeeTokenConfig.bind(this),
       [TokenType.collateralVault]:
         this.deriveHypCollateralVaultTokenConfig.bind(this),
       [TokenType.collateralCctp]:
@@ -597,6 +599,28 @@ export class EvmERC20WarpRouteReader extends EvmRouterReader {
     return {
       ...erc20TokenMetadata,
       type: TokenType.collateralFiat,
+    };
+  }
+
+  private async deriveHypCollateralFiatWithFeeTokenConfig(
+    hypToken: Address,
+  ): Promise<HypTokenConfig> {
+    const erc20TokenMetadata =
+      await this.deriveHypCollateralTokenConfig(hypToken);
+
+    // Read feeCollector from the contract using a simple contract interface
+    const provider = this.multiProvider.getProvider(this.chain);
+    const contract = new Contract(
+      hypToken,
+      ['function feeCollector() view returns (address)'],
+      provider,
+    );
+    const feeCollector = await contract.feeCollector();
+
+    return {
+      ...erc20TokenMetadata,
+      type: TokenType.collateralFiatWithFee,
+      feeCollector,
     };
   }
 

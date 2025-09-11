@@ -54,6 +54,7 @@ import {
   WarpRouteDeployConfigMailboxRequired,
   isCctpTokenConfig,
   isCollateralTokenConfig,
+  isCollateralFiatWithFeeTokenConfig,
   isMovableCollateralTokenConfig,
   isNativeTokenConfig,
   isOpL1TokenConfig,
@@ -70,6 +71,7 @@ const OP_L2_INITIALIZE_SIGNATURE = 'initialize(address,address)';
 const OP_L1_INITIALIZE_SIGNATURE = 'initialize(address,string[])';
 // initialize(address _hook, address _owner, string[] memory __urls)
 const CCTP_INITIALIZE_SIGNATURE = 'initialize(address,address,string[])';
+const HYP_FIAT_TOKEN_WITH_FEE_INITIALIZE_SIGNATURE = 'initialize(address,address,address,address)';
 
 export const TOKEN_INITIALIZE_SIGNATURE = (
   contractName: HypERC20contracts[TokenType],
@@ -99,6 +101,8 @@ export const TOKEN_INITIALIZE_SIGNATURE = (
         'missing expected initialize function',
       );
       return CCTP_INITIALIZE_SIGNATURE;
+    case 'HypFiatTokenWithFee':
+      return HYP_FIAT_TOKEN_WITH_FEE_INITIALIZE_SIGNATURE;
     default:
       return 'initialize';
   }
@@ -131,6 +135,8 @@ abstract class TokenDeployer<
     const scale = config.scale ?? 1;
 
     if (isCollateralTokenConfig(config) || isXERC20TokenConfig(config)) {
+      return [config.token, scale, config.mailbox];
+    } else if (isCollateralFiatWithFeeTokenConfig(config)) {
       return [config.token, scale, config.mailbox];
     } else if (isNativeTokenConfig(config)) {
       return [scale, config.mailbox];
@@ -180,6 +186,8 @@ abstract class TokenDeployer<
       isNativeTokenConfig(config)
     ) {
       return defaultArgs;
+    } else if (isCollateralFiatWithFeeTokenConfig(config)) {
+      return [...defaultArgs, config.feeCollector];
     } else if (isOpL2TokenConfig(config)) {
       return [config.hook ?? constants.AddressZero, config.owner];
     } else if (isOpL1TokenConfig(config)) {
@@ -240,6 +248,7 @@ abstract class TokenDeployer<
 
       if (
         isCollateralTokenConfig(config) ||
+        isCollateralFiatWithFeeTokenConfig(config) ||
         isXERC20TokenConfig(config) ||
         isCctpTokenConfig(config)
       ) {
