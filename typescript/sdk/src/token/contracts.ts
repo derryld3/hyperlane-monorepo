@@ -1,5 +1,6 @@
 import {
   HypERC20Collateral__factory,
+  HypERC20CollateralWithFee__factory,
   HypERC20__factory,
   HypERC721Collateral__factory,
   HypERC721URICollateral__factory,
@@ -27,6 +28,7 @@ export const hypERC20contracts = {
   [TokenType.collateral]: 'HypERC20Collateral',
   [TokenType.collateralFiat]: 'HypFiatToken',
   [TokenType.collateralFiatWithFee]: 'HypFiatTokenWithFee',
+  [TokenType.collateralWithFee]: 'HypERC20CollateralWithFee',
   [TokenType.collateralUri]: 'HypERC721Collateral',
   [TokenType.XERC20]: 'HypXERC20',
   [TokenType.XERC20Lockbox]: 'HypXERC20Lockbox',
@@ -50,6 +52,7 @@ export const hypERC20factories = {
   [TokenType.syntheticRebase]: new HypERC4626__factory(),
   [TokenType.collateralFiat]: new HypFiatToken__factory(),
   [TokenType.collateralFiatWithFee]: new HypFiatTokenWithFee__factory(),
+  [TokenType.collateralWithFee]: new HypERC20CollateralWithFee__factory(),
   [TokenType.XERC20]: new HypXERC20__factory(),
   [TokenType.XERC20Lockbox]: new HypXERC20Lockbox__factory(),
   [TokenType.native]: new HypNative__factory(),

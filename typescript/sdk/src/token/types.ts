@@ -127,6 +127,18 @@ export const CollateralFiatWithFeeTokenConfigSchema = CollateralTokenConfigSchem
 export type CollateralFiatWithFeeTokenConfig = z.infer<typeof CollateralFiatWithFeeTokenConfigSchema>;
 export const isCollateralFiatWithFeeTokenConfig = isCompliant(CollateralFiatWithFeeTokenConfigSchema);
 
+export const CollateralWithFeeTokenConfigSchema = CollateralTokenConfigSchema.omit({
+  type: true,
+}).extend({
+  type: z.literal(TokenType.collateralWithFee),
+  feeCollector: z
+    .string()
+    .describe('Address that will collect fees from token transfers'),
+});
+
+export type CollateralWithFeeTokenConfig = z.infer<typeof CollateralWithFeeTokenConfigSchema>;
+export const isCollateralWithFeeTokenConfig = isCompliant(CollateralWithFeeTokenConfigSchema);
+
 export enum XERC20Type {
   Velo = 'velo',
   Standard = 'standard',
@@ -274,6 +286,7 @@ export const HypTokenConfigSchema = z.discriminatedUnion('type', [
   OpL1TokenConfigSchema,
   CollateralTokenConfigSchema,
   CollateralFiatWithFeeTokenConfigSchema,
+  CollateralWithFeeTokenConfigSchema,
   XERC20TokenConfigSchema,
   SyntheticTokenConfigSchema,
   SyntheticRebaseTokenConfigSchema,
@@ -323,6 +336,7 @@ export const WarpRouteDeployConfigSchema = z
         ([_, config]) =>
           isCollateralTokenConfig(config) ||
           isCollateralFiatWithFeeTokenConfig(config) ||
+          isCollateralWithFeeTokenConfig(config) ||
           isCollateralRebaseTokenConfig(config) ||
           isCctpTokenConfig(config) ||
           isXERC20TokenConfig(config) ||
