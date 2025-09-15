@@ -263,6 +263,7 @@ export const EVM_TOKEN_TYPE_TO_STANDARD: Record<TokenType, TokenStandard> = {
   [TokenType.collateral]: TokenStandard.EvmHypCollateral,
   [TokenType.collateralFiat]: TokenStandard.EvmHypCollateralFiat,
   [TokenType.collateralFiatWithFee]: TokenStandard.EvmHypCollateralFiat,
+  [TokenType.collateralWithFee]: TokenStandard.EvmHypCollateral,
   [TokenType.XERC20]: TokenStandard.EvmHypXERC20,
   [TokenType.XERC20Lockbox]: TokenStandard.EvmHypXERC20Lockbox,
   [TokenType.collateralVault]: TokenStandard.EvmHypOwnerCollateral,

@@ -57,6 +57,8 @@ const TYPE_DESCRIPTIONS: Record<TokenType, string> = {
     'Extends an existing FiatToken with remote transfer functionality',
   [TokenType.collateralFiatWithFee]:
     'Extends an existing FiatToken with remote transfer functionality and fee collection',
+  [TokenType.collateralWithFee]:
+    'Extends an existing ERC20 with remote transfer functionality and fee collection',
   [TokenType.XERC20]:
     'Extends an existing xERC20 with Warp Route functionality',
   [TokenType.XERC20Lockbox]:
@@ -249,6 +251,20 @@ export async function createWarpRouteDeployConfig({
         };
         break;
       case TokenType.collateralFiatWithFee:
+        result[chain] = {
+          type,
+          owner,
+          proxyAdmin,
+          interchainSecurityModule,
+          token: await input({
+            message: `Enter the existing token address on chain ${chain}`,
+          }),
+          feeCollector: await input({
+            message: `Enter the fee collector address on chain ${chain}`,
+          }),
+        };
+        break;
+      case TokenType.collateralWithFee:
         result[chain] = {
           type,
           owner,
