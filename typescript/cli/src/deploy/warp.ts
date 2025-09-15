@@ -41,6 +41,8 @@ import {
   getSubmitterBuilder,
   getTokenConnectionId,
   isCollateralTokenConfig,
+  isCollateralFiatWithFeeTokenConfig,
+  isCollateralWithFeeTokenConfig,
   isXERC20TokenConfig,
   splitWarpCoreAndExtendedConfigs,
   tokenTypeToStandard,
@@ -312,7 +314,7 @@ function generateTokenConfigs(
   for (const chainName of Object.keys(contracts)) {
     const config = warpDeployConfig[chainName];
     const collateralAddressOrDenom =
-      isCollateralTokenConfig(config) || isXERC20TokenConfig(config)
+      isCollateralTokenConfig(config) || isCollateralFiatWithFeeTokenConfig(config) || isCollateralWithFeeTokenConfig(config) || isXERC20TokenConfig(config)
         ? config.token // gets set in the above deriveTokenMetadata()
         : undefined;
 
