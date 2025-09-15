@@ -705,6 +705,8 @@ export {
   HypTokenRouterVirtualConfig,
   isCollateralRebaseTokenConfig,
   isCollateralTokenConfig,
+  isCollateralFiatWithFeeTokenConfig,
+  isCollateralWithFeeTokenConfig,
   isMovableCollateralTokenConfig,
   isNativeTokenConfig,
   isSyntheticRebaseTokenConfig,
